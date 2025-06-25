@@ -412,7 +412,27 @@ key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZk
 supabase: Client = create_client(url, key)
 
 # UI
-st.title("⚾ 롯데 경기 승부 예측")
+st.title("⚾ 롯데 vs 상대팀 승부 예측")
+
+col11, col12 = st.columns([6.5, 3.5])
+with col11:
+    nickname = st.text_input("닉네임을 입력하세요")
+
+with col12:
+    selected = st.radio("누가 이길까요?", ("롯데", "상대팀"))
+
+if st.button("예측 제출하기"):
+    if nickname:
+        supabase.table("vote_predictions").insert({
+            "id": str(uuid.uuid4()),
+            "nickname": nickname,
+            "selected_team": selected,
+            "vote_date": today.isoformat()
+        }).execute()
+        st.success(f"{nickname} 님의 예측이 저장되었습니다!")
+    else:
+        st.warning("닉네임을 입력해주세요.")
+
 # 오늘 날짜의 예측만 집계
 res = supabase.table("vote_predictions").select("*").eq("vote_date", today).execute()
 votes = pd.DataFrame(res.data)
@@ -447,25 +467,6 @@ if not votes.empty:
         st.markdown(f"**{team}**: {', '.join(names)}")
 else:
     st.info("아직 오늘의 예측이 없습니다. 첫 예측자가 되어보세요!")
-
-nickname = st.text_input("닉네임을 입력하세요")
-selected = st.radio("누가 이길까요?", ("롯데", "상대팀"))
-
-
-if st.button("예측 제출하기"):
-    if nickname:
-        supabase.table("vote_predictions").insert({
-            "id": str(uuid.uuid4()),
-            "nickname": nickname,
-            "selected_team": selected,
-            "vote_date": today.isoformat() 
-        }).execute()
-        st.success(f"{nickname} 님의 예측이 저장되었습니다!")
-    else:
-        st.warning("닉네임을 입력해주세요.")
-
-res = supabase.table("vote_predictions").select("*").eq("vote_date", today).execute()
-votes = pd.DataFrame(res.data)
 
 
 
