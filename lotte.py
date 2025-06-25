@@ -356,26 +356,28 @@ with col5:
 import feedparser
 
 with col6:
-    st.subheader("🎬 롯데 자이언츠 하이라이트")
+    from youtubesearchpython import VideosSearch
 
-    import feedparser
-    import urllib.parse
+    st.subheader("🎬 최근 경기 하이라이트")
 
-    search_query = "롯데 자이언츠 하이라이트"
-    encoded_query = urllib.parse.quote(search_query)
-    rss_url = f"https://www.youtube.com/feeds/videos.xml?search_query={encoded_query}"
+    query = "티빙 롯데 자이언츠 하이라이트"
+    videos_search = VideosSearch(query, limit=2)
+    result = videos_search.result()
 
-    try:
-        feed = feedparser.parse(rss_url)
-        if feed.entries:
-            for entry in feed.entries[:3]:  # 상위 3개 영상만 표시
-                st.markdown(f"**{entry.title}**")
-                st.video(entry.link)
-        else:
-            st.warning("⚠️ 하이라이트 영상을 찾을 수 없습니다.")
-    except Exception as e:
-        st.error(f"❌ 피드 불러오기 실패: {e}")
-
+    if result["result"]:
+        for video in result["result"]:
+            video_url = video["link"]
+            video_id = video_url.split("v=")[-1]
+            st.markdown(
+                f"""
+                <iframe width="400" height="225"
+                src="https://www.youtube.com/embed/{video_id}"
+                frameborder="0" allowfullscreen></iframe>
+                """,
+                unsafe_allow_html=True
+            )
+    else:
+        st.warning("하이라이트 영상을 찾을 수 없습니다.")
 
 
 
