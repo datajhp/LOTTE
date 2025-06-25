@@ -409,7 +409,7 @@ url = "https://vdltbxhknxhckhakuyin.supabase.co"
 key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbHRieGhrbnhoY2toYWt1eWluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4MzQ3MTgsImV4cCI6MjA2NjQxMDcxOH0.XY07QQtvjjQ2QyR4-FvZGk3yipRs8EGYmHBZ845tUu0"
 supabase: Client = create_client(url, key)
 
-# UI: 입력
+# UI
 st.title("⚾ 롯데 vs 상대팀 승부 예측")
 
 nickname = st.text_input("닉네임을 입력하세요")
@@ -420,35 +420,47 @@ if st.button("예측 제출하기"):
         supabase.table("vote_predictions").insert({
             "id": str(uuid.uuid4()),
             "nickname": nickname,
-            "selected_team": selected
+            "selected_team": selected,
+            "vote_date": today
         }).execute()
         st.success(f"{nickname} 님의 예측이 저장되었습니다!")
     else:
         st.warning("닉네임을 입력해주세요.")
 
-# 예측 집계
-res = supabase.table("vote_predictions").select("*").execute()
+# 오늘 날짜의 예측만 집계
+res = supabase.table("vote_predictions").select("*").eq("vote_date", today).execute()
 votes = pd.DataFrame(res.data)
 
 if not votes.empty:
-    # 득표 수
     count_df = votes["selected_team"].value_counts().reset_index()
     count_df.columns = ["팀", "득표 수"]
-
-    # 득표율
     total = count_df["득표 수"].sum()
     count_df["득표율"] = count_df["득표 수"] / total * 100
 
     st.subheader("📊 현재 예측 현황")
-    st.bar_chart(count_df.set_index("팀")["득표율"])
+    import streamlit.components.v1 as components
 
-    # 선택자 명단
+    team_a = count_df[count_df["팀"] == "롯데"]["득표율"].values[0] if "롯데" in count_df["팀"].values else 0
+    team_b = 100 - team_a
+
+    html_code = f"""
+    <div style="display: flex; height: 40px; width: 100%; border-radius: 8px; overflow: hidden; box-shadow: inset 0 0 5px rgba(0,0,0,0.1);">
+        <div style="width: {team_a}%; background-color: #ff4d4d; text-align: center; color: white; line-height: 40px;">
+            롯데 {team_a:.1f}%
+        </div>
+        <div style="width: {team_b}%; background-color: #4da6ff; text-align: center; color: white; line-height: 40px;">
+            상대팀 {team_b:.1f}%
+        </div>
+    </div>
+    """
+    components.html(html_code, height=50)
+
     st.markdown("### 🧑 예측한 사람 목록")
     for team in count_df["팀"]:
         names = votes[votes["selected_team"] == team]["nickname"].tolist()
         st.markdown(f"**{team}**: {', '.join(names)}")
-
-
+else:
+    st.info("아직 오늘의 예측이 없습니다. 첫 예측자가 되어보세요!")
 
 
 
