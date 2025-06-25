@@ -401,7 +401,52 @@ st.link_button("▶ 예매 페이지", lotte_url)
 
 
 
-# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbHRieGhrbnhoY2toYWt1eWluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4MzQ3MTgsImV4cCI6MjA2NjQxMDcxOH0.XY07QQtvjjQ2QyR4-FvZGk3yipRs8EGYmHBZ845tUu0
+from supabase import create_client, Client
+import uuid
+
+# Supabase 설정
+url = "https://vdltbxhknxhckhakuyin.supabase.co"
+key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbHRieGhrbnhoY2toYWt1eWluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4MzQ3MTgsImV4cCI6MjA2NjQxMDcxOH0.XY07QQtvjjQ2QyR4-FvZGk3yipRs8EGYmHBZ845tUu0"
+supabase: Client = create_client(url, key)
+
+# UI: 입력
+st.title("⚾ 롯데 vs 상대팀 승부 예측")
+
+nickname = st.text_input("닉네임을 입력하세요")
+selected = st.radio("누가 이길까요?", ("롯데", "상대팀"))
+
+if st.button("예측 제출하기"):
+    if nickname:
+        supabase.table("vote_predictions").insert({
+            "id": str(uuid.uuid4()),
+            "nickname": nickname,
+            "selected_team": selected
+        }).execute()
+        st.success(f"{nickname} 님의 예측이 저장되었습니다!")
+    else:
+        st.warning("닉네임을 입력해주세요.")
+
+# 예측 집계
+res = supabase.table("vote_predictions").select("*").execute()
+votes = pd.DataFrame(res.data)
+
+if not votes.empty:
+    # 득표 수
+    count_df = votes["selected_team"].value_counts().reset_index()
+    count_df.columns = ["팀", "득표 수"]
+
+    # 득표율
+    total = count_df["득표 수"].sum()
+    count_df["득표율"] = count_df["득표 수"] / total * 100
+
+    st.subheader("📊 현재 예측 현황")
+    st.bar_chart(count_df.set_index("팀")["득표율"])
+
+    # 선택자 명단
+    st.markdown("### 🧑 예측한 사람 목록")
+    for team in count_df["팀"]:
+        names = votes[votes["selected_team"] == team]["nickname"].tolist()
+        st.markdown(f"**{team}**: {', '.join(names)}")
 
 
 
