@@ -358,19 +358,24 @@ import feedparser
 with col6:
     st.subheader("🎬 롯데 자이언츠 하이라이트")
 
+    import feedparser
+    import urllib.parse
+
     search_query = "롯데 자이언츠 하이라이트"
-    rss_url = f"https://www.youtube.com/feeds/videos.xml?search_query={search_query}".strip()
+    encoded_query = urllib.parse.quote(search_query)
+    rss_url = f"https://www.youtube.com/feeds/videos.xml?search_query={encoded_query}"
 
     try:
         feed = feedparser.parse(rss_url)
         if feed.entries:
-             for entry in feed.entries[:3]:  # 상위 3개만 예시
-                 print(entry.title)
-                 print(entry.link)
-         else:
-             print("⚠️ 피드에 항목이 없습니다.")
+            for entry in feed.entries[:3]:  # 상위 3개 영상만 표시
+                st.markdown(f"**{entry.title}**")
+                st.video(entry.link)
+        else:
+            st.warning("⚠️ 하이라이트 영상을 찾을 수 없습니다.")
     except Exception as e:
-         print("❌ 피드 불러오기 실패:", e)
+        st.error(f"❌ 피드 불러오기 실패: {e}")
+
 
 
 
