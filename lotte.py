@@ -423,7 +423,7 @@ if st.button("예측 제출하기"):
             "id": str(uuid.uuid4()),
             "nickname": nickname,
             "selected_team": selected,
-            "vote_date": today
+            "vote_date": today.isoformat() 
         }).execute()
         st.success(f"{nickname} 님의 예측이 저장되었습니다!")
     else:
