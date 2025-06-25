@@ -359,7 +359,7 @@ with col6:
     st.subheader("🎬 롯데 자이언츠 하이라이트")
 
     search_query = "롯데 자이언츠 하이라이트"
-    rss_url = f"https://www.youtube.com/feeds/videos.xml?search_query={search_query}"
+    rss_url = f"https://www.youtube.com/feeds/videos.xml?search_query={search_query}".strip()
 
     feed = feedparser.parse(rss_url)
 
