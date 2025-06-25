@@ -387,7 +387,7 @@ with col6:
 
     # 영상 2
     st.markdown("**2. 롯데 자이언츠 주간 플레이 모음**")
-    st.video("https://www.youtube.com/watch?v=yycReyidMIo")
+    st.video("https://youtu.be/zNFLJ5o_Sfg?si=GoCT-3TPuiqStHGP")
 
 
 
