@@ -1,0 +1,23 @@
+# Streamlit 웹앱
+streamlit
+
+# 웹 크롤링
+requests
+beautifulsoup4
+pandas
+lxml
+
+# 날씨 API 호출 및 날짜 처리
+python-dateutil
+
+# 유튜브 검색 (YouTubeSearchPython)
+youtube-search-python
+
+# 뉴스 크롤링 및 iframe 등 HTML 구성
+html5lib
+
+# Supabase 연동 (선택적으로 사용 시)
+supabase-py
+
+# 기타 (경우에 따라 필요할 수 있음)
+urllib3
