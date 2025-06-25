@@ -421,17 +421,17 @@ with col11:
 with col12:
     selected = st.radio("누가 이길까요?", ("롯데", "상대팀"))
 
-if st.button("예측 제출하기"):
-    if nickname:
-        supabase.table("vote_predictions").insert({
-            "id": str(uuid.uuid4()),
-            "nickname": nickname,
-            "selected_team": selected,
-            "vote_date": today.isoformat()
-        }).execute()
-        st.success(f"{nickname} 님의 예측이 저장되었습니다!")
-    else:
-        st.warning("닉네임을 입력해주세요.")
+    if st.button("예측 제출하기"):
+        if nickname:
+            supabase.table("vote_predictions").insert({
+                "id": str(uuid.uuid4()),
+                "nickname": nickname,
+                "selected_team": selected,
+                "vote_date": today.isoformat()
+            }).execute()
+            st.success(f"{nickname} 님의 예측이 저장되었습니다!")
+        else:
+            st.warning("닉네임을 입력해주세요.")
 
 # 오늘 날짜의 예측만 집계
 res = supabase.table("vote_predictions").select("*").eq("vote_date", today).execute()
