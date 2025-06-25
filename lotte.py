@@ -414,7 +414,13 @@ supabase: Client = create_client(url, key)
 # UI
 st.title("⚾ 롯데 경기 승부 예측")
 
-st.subheader("📊 현재 예측 현황")
+if not votes.empty:
+    count_df = votes["selected_team"].value_counts().reset_index()
+    count_df.columns = ["팀", "득표 수"]
+    total = count_df["득표 수"].sum()
+    count_df["득표율"] = count_df["득표 수"] / total * 100
+
+    st.subheader("📊 현재 예측 현황")
     import streamlit.components.v1 as components
 
     team_a = count_df[count_df["팀"] == "롯데"]["득표율"].values[0] if "롯데" in count_df["팀"].values else 0
@@ -432,8 +438,16 @@ st.subheader("📊 현재 예측 현황")
     """
     components.html(html_code, height=50)
 
+    st.markdown("### 🧑 예측한 사람 목록")
+    for team in count_df["팀"]:
+        names = votes[votes["selected_team"] == team]["nickname"].tolist()
+        st.markdown(f"**{team}**: {', '.join(names)}")
+else:
+    st.info("아직 오늘의 예측이 없습니다. 첫 예측자가 되어보세요!")
+
 nickname = st.text_input("닉네임을 입력하세요")
 selected = st.radio("누가 이길까요?", ("롯데", "상대팀"))
+
 
 if st.button("예측 제출하기"):
     if nickname:
@@ -451,19 +465,6 @@ if st.button("예측 제출하기"):
 res = supabase.table("vote_predictions").select("*").eq("vote_date", today).execute()
 votes = pd.DataFrame(res.data)
 
-if not votes.empty:
-    count_df = votes["selected_team"].value_counts().reset_index()
-    count_df.columns = ["팀", "득표 수"]
-    total = count_df["득표 수"].sum()
-    count_df["득표율"] = count_df["득표 수"] / total * 100
-
-
-    st.markdown("### 🧑 예측한 사람 목록")
-    for team in count_df["팀"]:
-        names = votes[votes["selected_team"] == team]["nickname"].tolist()
-        st.markdown(f"**{team}**: {', '.join(names)}")
-else:
-    st.info("아직 오늘의 예측이 없습니다. 첫 예측자가 되어보세요!")
 
 
 
