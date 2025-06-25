@@ -412,7 +412,7 @@ key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZk
 supabase: Client = create_client(url, key)
 
 # UI
-st.title("⚾ 롯데 vs 상대팀 승부 예측")
+st.title(f"⚾ {today.strftime('%m월 %d일')} 롯데 경기 승부 예측")
 
 col11, col12 = st.columns([2, 8])
 with col11:
