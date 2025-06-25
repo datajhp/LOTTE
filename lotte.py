@@ -353,7 +353,6 @@ with col5:
     # iframe으로 임베드 (주의: 사이트가 X-Frame-Options 정책으로 막혀 있을 수 있음)
     st.components.v1.iframe(src=kbo_gamecenter_url1, width=1250, height=800, scrolling=True)
     
-import feedparser
 
 with col6:
     from youtubesearchpython import VideosSearch
