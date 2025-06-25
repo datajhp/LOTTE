@@ -464,7 +464,8 @@ if st.button("예측 제출하기"):
     else:
         st.warning("닉네임을 입력해주세요.")
 
-
+res = supabase.table("vote_predictions").select("*").eq("vote_date", today).execute()
+votes = pd.DataFrame(res.data)
 
 
 
