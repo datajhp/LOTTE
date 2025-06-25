@@ -412,7 +412,25 @@ key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZk
 supabase: Client = create_client(url, key)
 
 # UI
-st.title("⚾ 롯데 vs 상대팀 승부 예측")
+st.title("⚾ 롯데 경기 승부 예측")
+
+st.subheader("📊 현재 예측 현황")
+    import streamlit.components.v1 as components
+
+    team_a = count_df[count_df["팀"] == "롯데"]["득표율"].values[0] if "롯데" in count_df["팀"].values else 0
+    team_b = 100 - team_a
+
+    html_code = f"""
+    <div style="display: flex; height: 40px; width: 100%; border-radius: 8px; overflow: hidden; box-shadow: inset 0 0 5px rgba(0,0,0,0.1);">
+        <div style="width: {team_a}%; background-color: #ff4d4d; text-align: center; color: white; line-height: 40px;">
+            롯데 {team_a:.1f}%
+        </div>
+        <div style="width: {team_b}%; background-color: #4da6ff; text-align: center; color: white; line-height: 40px;">
+            상대팀 {team_b:.1f}%
+        </div>
+    </div>
+    """
+    components.html(html_code, height=50)
 
 nickname = st.text_input("닉네임을 입력하세요")
 selected = st.radio("누가 이길까요?", ("롯데", "상대팀"))
@@ -439,23 +457,6 @@ if not votes.empty:
     total = count_df["득표 수"].sum()
     count_df["득표율"] = count_df["득표 수"] / total * 100
 
-    st.subheader("📊 현재 예측 현황")
-    import streamlit.components.v1 as components
-
-    team_a = count_df[count_df["팀"] == "롯데"]["득표율"].values[0] if "롯데" in count_df["팀"].values else 0
-    team_b = 100 - team_a
-
-    html_code = f"""
-    <div style="display: flex; height: 40px; width: 100%; border-radius: 8px; overflow: hidden; box-shadow: inset 0 0 5px rgba(0,0,0,0.1);">
-        <div style="width: {team_a}%; background-color: #ff4d4d; text-align: center; color: white; line-height: 40px;">
-            롯데 {team_a:.1f}%
-        </div>
-        <div style="width: {team_b}%; background-color: #4da6ff; text-align: center; color: white; line-height: 40px;">
-            상대팀 {team_b:.1f}%
-        </div>
-    </div>
-    """
-    components.html(html_code, height=50)
 
     st.markdown("### 🧑 예측한 사람 목록")
     for team in count_df["팀"]:
