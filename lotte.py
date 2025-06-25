@@ -414,7 +414,7 @@ supabase: Client = create_client(url, key)
 # UI
 st.title("⚾ 롯데 vs 상대팀 승부 예측")
 
-col11, col12 = st.columns([6.5, 3.5])
+col11, col12 = st.columns([2, 8])
 with col11:
     nickname = st.text_input("닉네임을 입력하세요")
 
