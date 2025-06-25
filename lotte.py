@@ -413,6 +413,9 @@ supabase: Client = create_client(url, key)
 
 # UI
 st.title("⚾ 롯데 경기 승부 예측")
+# 오늘 날짜의 예측만 집계
+res = supabase.table("vote_predictions").select("*").eq("vote_date", today).execute()
+votes = pd.DataFrame(res.data)
 
 if not votes.empty:
     count_df = votes["selected_team"].value_counts().reset_index()
@@ -461,9 +464,7 @@ if st.button("예측 제출하기"):
     else:
         st.warning("닉네임을 입력해주세요.")
 
-# 오늘 날짜의 예측만 집계
-res = supabase.table("vote_predictions").select("*").eq("vote_date", today).execute()
-votes = pd.DataFrame(res.data)
+
 
 
 
