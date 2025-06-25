@@ -10,6 +10,8 @@ lxml
 # 날씨 API 호출 및 날짜 처리
 python-dateutil
 
+feedparser
+
 # 유튜브 검색 (YouTubeSearchPython)
 youtube-search-python
 
