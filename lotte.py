@@ -353,29 +353,23 @@ with col5:
     # iframe으로 임베드 (주의: 사이트가 X-Frame-Options 정책으로 막혀 있을 수 있음)
     st.components.v1.iframe(src=kbo_gamecenter_url1, width=1250, height=800, scrolling=True)
     
+import feedparser
+
 with col6:
-    from youtubesearchpython import VideosSearch
+    st.subheader("🎬 롯데 자이언츠 하이라이트")
 
-    st.subheader("🎬 최근 경기 하이라이트")
+    search_query = "롯데 자이언츠 하이라이트"
+    rss_url = f"https://www.youtube.com/feeds/videos.xml?search_query={search_query}"
 
-    query = "티빙 롯데 자이언츠 하이라이트"
-    videos_search = VideosSearch(query, limit=2)
-    result = videos_search.result()
+    feed = feedparser.parse(rss_url)
 
-    if result["result"]:
-        for video in result["result"]:
-            video_url = video["link"]
-            video_id = video_url.split("v=")[-1]
-            st.markdown(
-                f"""
-                <iframe width="400" height="225"
-                src="https://www.youtube.com/embed/{video_id}"
-                frameborder="0" allowfullscreen></iframe>
-                """,
-                unsafe_allow_html=True
-            )
+    if feed.entries:
+        for entry in feed.entries[:2]:  # 상위 2개 영상만
+            video_url = entry.link
+            st.video(video_url)
     else:
-        st.warning("하이라이트 영상을 찾을 수 없습니다.")
+        st.warning("🎥 관련 유튜브 영상을 찾을 수 없습니다.")
+
 
 
 
