@@ -388,15 +388,17 @@ with col6:
     # 영상 2
     st.markdown("**2. 롯데 자이언츠 주간 플레이 모음**")
     st.video("https://youtu.be/zNFLJ5o_Sfg?si=GoCT-3TPuiqStHGP")
+    
+    lotte_url = f"https://ticket.giantsclub.com/loginForm.do"
+
+    st.subheader("📅 예매하러 가기")
+    st.write("오픈 시간: 일반 예매 기준 일주일 전 14시 입니다.")
+    st.link_button("▶ 예매 페이지", lotte_url)
 
 
 
+st.markdown("<hr style='border: 1px solid #ddd; margin: 20px 0;'>", unsafe_allow_html=True)
 
-lotte_url = f"https://ticket.giantsclub.com/loginForm.do"
-
-st.subheader("📅 예매하러 가기")
-st.write("오픈 시간: 일반 예매 기준 일주일 전 14시 입니다.")
-st.link_button("▶ 예매 페이지", lotte_url)
 
 
 
