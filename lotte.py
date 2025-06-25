@@ -369,7 +369,7 @@ with col6:
                  print(entry.link)
          else:
              print("⚠️ 피드에 항목이 없습니다.")
-     except Exception as e:
+    except Exception as e:
          print("❌ 피드 불러오기 실패:", e)
 
 
