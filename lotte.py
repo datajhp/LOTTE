@@ -414,12 +414,12 @@ supabase: Client = create_client(url, key)
 # UI
 st.title(f"⚾ {today.strftime('%m월 %d일')} 롯데 경기 승부 예측")
 
-col11, col12, col13 = st.columns([2, 2, 6])
+col11, col12, col13 = st.columns([3, 3, 6])
 with col11:
     nickname = st.text_input("닉네임을 입력하세요")
 
 with col12:
-    selected = st.radio("누가 이길까요?", ("롯데", "상대팀"))
+    selected = st.radio("누가 이길까요?", ("최강 롯데자이언츠", "상대팀"))
 
     if st.button("예측 제출하기"):
         if nickname:
