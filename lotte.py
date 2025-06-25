@@ -354,30 +354,40 @@ with col5:
     st.components.v1.iframe(src=kbo_gamecenter_url1, width=1250, height=800, scrolling=True)
     
 
+#with col6:
+#    from youtubesearchpython import VideosSearch
+
+#    st.subheader("🎬 최근 경기 하이라이트")
+
+#    query = "티빙 롯데 자이언츠 하이라이트"
+#    videos_search = VideosSearch(query, limit=2)
+#    result = videos_search.result()
+
+#    if result["result"]:
+#        for video in result["result"]:
+#            video_url = video["link"]
+#            video_id = video_url.split("v=")[-1]
+#            st.markdown(
+#                f"""
+#                <iframe width="400" height="225"
+#                src="https://www.youtube.com/embed/{video_id}"
+#                frameborder="0" allowfullscreen></iframe>
+#                """,
+#                unsafe_allow_html=True
+#            )
+#    else:
+#        st.warning("하이라이트 영상을 찾을 수 없습니다.")
+
 with col6:
-    from youtubesearchpython import VideosSearch
+    st.subheader("🎬 롯데 자이언츠 하이라이트")
 
-    st.subheader("🎬 최근 경기 하이라이트")
+    # 영상 1
+    st.markdown("**1. 롯데 vs 삼성 하이라이트**")
+    st.video("https://youtu.be/VToF__mooJs?si=ViJYOvBfV0RTiduD")
 
-    query = "티빙 롯데 자이언츠 하이라이트"
-    videos_search = VideosSearch(query, limit=2)
-    result = videos_search.result()
-
-    if result["result"]:
-        for video in result["result"]:
-            video_url = video["link"]
-            video_id = video_url.split("v=")[-1]
-            st.markdown(
-                f"""
-                <iframe width="400" height="225"
-                src="https://www.youtube.com/embed/{video_id}"
-                frameborder="0" allowfullscreen></iframe>
-                """,
-                unsafe_allow_html=True
-            )
-    else:
-        st.warning("하이라이트 영상을 찾을 수 없습니다.")
-
+    # 영상 2
+    st.markdown("**2. 롯데 자이언츠 주간 플레이 모음**")
+    st.video("https://www.youtube.com/watch?v=yycReyidMIo")
 
 
 
