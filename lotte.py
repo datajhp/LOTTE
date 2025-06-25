@@ -362,15 +362,15 @@ with col6:
     rss_url = f"https://www.youtube.com/feeds/videos.xml?search_query={search_query}".strip()
 
     try:
-    feed = feedparser.parse(rss_url)
-    if feed.entries:
-        for entry in feed.entries[:3]:  # 상위 3개만 예시
-            print(entry.title)
-            print(entry.link)
-    else:
-        print("⚠️ 피드에 항목이 없습니다.")
-except Exception as e:
-    print("❌ 피드 불러오기 실패:", e)
+       feed = feedparser.parse(rss_url)
+       if feed.entries:
+            for entry in feed.entries[:3]:  # 상위 3개만 예시
+                print(entry.title)
+                print(entry.link)
+        else:
+            print("⚠️ 피드에 항목이 없습니다.")
+    except Exception as e:
+        print("❌ 피드 불러오기 실패:", e)
 
 
 
