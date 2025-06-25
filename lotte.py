@@ -414,7 +414,7 @@ supabase: Client = create_client(url, key)
 # UI
 st.title(f"⚾ {today.strftime('%m월 %d일')} 롯데 경기 승부 예측")
 
-col11, col12 = st.columns([2, 8])
+col11, col12, col13 = st.columns([2, 2, 6])
 with col11:
     nickname = st.text_input("닉네임을 입력하세요")
 
@@ -437,36 +437,37 @@ if st.button("예측 제출하기"):
 res = supabase.table("vote_predictions").select("*").eq("vote_date", today).execute()
 votes = pd.DataFrame(res.data)
 
-if not votes.empty:
-    count_df = votes["selected_team"].value_counts().reset_index()
-    count_df.columns = ["팀", "득표 수"]
-    total = count_df["득표 수"].sum()
-    count_df["득표율"] = count_df["득표 수"] / total * 100
-
-    st.subheader("📊 현재 예측 현황")
-    import streamlit.components.v1 as components
-
-    team_a = count_df[count_df["팀"] == "롯데"]["득표율"].values[0] if "롯데" in count_df["팀"].values else 0
-    team_b = 100 - team_a
-
-    html_code = f"""
-    <div style="display: flex; height: 40px; width: 100%; border-radius: 8px; overflow: hidden; box-shadow: inset 0 0 5px rgba(0,0,0,0.1);">
-        <div style="width: {team_a}%; background-color: #ff4d4d; text-align: center; color: white; line-height: 40px;">
-            롯데 {team_a:.1f}%
+with col13:
+    if not votes.empty:
+        count_df = votes["selected_team"].value_counts().reset_index()
+        count_df.columns = ["팀", "득표 수"]
+        total = count_df["득표 수"].sum()
+        count_df["득표율"] = count_df["득표 수"] / total * 100
+    
+        st.subheader("📊 현재 예측 현황")
+        import streamlit.components.v1 as components
+    
+        team_a = count_df[count_df["팀"] == "롯데"]["득표율"].values[0] if "롯데" in count_df["팀"].values else 0
+        team_b = 100 - team_a
+    
+        html_code = f"""
+        <div style="display: flex; height: 40px; width: 100%; border-radius: 8px; overflow: hidden; box-shadow: inset 0 0 5px rgba(0,0,0,0.1);">
+            <div style="width: {team_a}%; background-color: #ff4d4d; text-align: center; color: white; line-height: 40px;">
+                롯데 {team_a:.1f}%
+            </div>
+            <div style="width: {team_b}%; background-color: #4da6ff; text-align: center; color: white; line-height: 40px;">
+                상대팀 {team_b:.1f}%
+            </div>
         </div>
-        <div style="width: {team_b}%; background-color: #4da6ff; text-align: center; color: white; line-height: 40px;">
-            상대팀 {team_b:.1f}%
-        </div>
-    </div>
-    """
-    components.html(html_code, height=50)
-
-    st.markdown("### 🧑 예측한 사람 목록")
-    for team in count_df["팀"]:
-        names = votes[votes["selected_team"] == team]["nickname"].tolist()
-        st.markdown(f"**{team}**: {', '.join(names)}")
-else:
-    st.info("아직 오늘의 예측이 없습니다. 첫 예측자가 되어보세요!")
+        """
+        components.html(html_code, height=50)
+    
+        st.markdown("### 🧑 예측한 사람 목록")
+        for team in count_df["팀"]:
+            names = votes[votes["selected_team"] == team]["nickname"].tolist()
+            st.markdown(f"**{team}**: {', '.join(names)}")
+    else:
+        st.info("아직 오늘의 예측이 없습니다. 첫 예측자가 되어보세요!")
 
 
 
