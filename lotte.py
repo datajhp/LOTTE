@@ -379,7 +379,11 @@ with col6:
 
 
 
+lotte_url = f"https://ticket.giantsclub.com/loginForm.do"
 
+st.subheader("📅 예매하러 가기")
+st.write("오픈 시간: 일반 예매 기준 일주일 전 14시 입니다.")
+st.link_button("▶ 예매 페이지", lotte_url)
 
 
 
